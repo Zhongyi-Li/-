@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      const state = { count: 1 };
+      const page = document.getElementById("app");
+      let active;
+      const defineReactive = (state) => {
+        for (let key in state) {
+          let value = state[key];
+          let deps = [];
+          Object.defineProperty(state, key, {
+            get() {
+              if (active) {
+                deps.push(active);
+              }
+              return value;
+            },
+            set(newValue) {
+              value = newValue;
+              deps.forEach((fn) => fn());
+            },
+          });
+        }
+      };
+      defineReactive(state);
+      const watcher = (fn) => {
+        active = fn;
+        fn();
+        active = null;
+      };
+
+      watcher(() => {
+        page.innerHTML = state.count;
+      });
+      watcher(() => {
+        console.log("state:", state.count);
+      });
+    </script>
+  </body>
+</html>

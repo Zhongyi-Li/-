@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button onclick="debouncedFunc">Click</button>
+    <script>
+      const btn = document.getElementsByTagName("button")[0];
+      //防抖（Debounce）: 防抖的原理是在一定时间内，只让最后一次操作生效，忽略中间的操作。
+      //当用户连续触发某个事件时，只有在事件停止触发一段时间后才会执行相应的操作。
+      function debounce(func, delay) {
+        let timer;
+        return function (...args) {
+          clearTimeout(timer);
+          timer = setTimeout(() => {
+            func.apply(this, args);
+          }, delay);
+        };
+      }
+
+      const debouncedFunc = debounce(() => {
+        console.log("防抖");
+      }, 1000);
+
+      //节流 频繁时间段内触发事件后 只会在这个时间断内执行一次事件
+      //第一种
+      //   function throttle(func, delay) {
+      //     let lastTime = 0;
+      //     return function (...args) {
+      //       const currentTime = Date.now();
+      //       if (currentTime - lastTime >= delay) {
+      //         func.apply(this, args);
+      //         lastTime = currentTime;
+      //       }
+      //     };
+      //   }
+      // 第二种
+      function throttle(func, delay) {
+        let lastTime = 0;
+        let newFunc;
+        return function (...args) {
+          const curTime = Date.now();
+          if (curTime - lastTime >= delay) {
+            newFunc = setTimeout(() => {
+              func.apply(this, args);
+            }, delay);
+            lastTime = curTime;
+          }
+        };
+      }
+
+      // 使用示例
+      const throttledFunc = throttle(() => {
+        console.log("节流");
+      }, 1000);
+
+      // 调用throttledFunc，在每隔1秒内只会执行一次实际函数
+
+      btn.addEventListener("click", throttledFunc);
+    </script>
+  </body>
+</html>

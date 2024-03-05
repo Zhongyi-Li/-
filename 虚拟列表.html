@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      /* 
+       1、对数据进行切片 以每次渲染50条为一个渲染周期 
+       2、使用 requestAnimationFrame 方法优化渲染过程，配合浏览器刷新渲染频率 使得渲染过程的更流畅 该方法是一个宏任务 会在上一次的50数据渲染后 立即执行
+       3、使用文档碎片 兼容老版本浏览器，createDocumentFragment (低版本浏览器每次创建li标签 apppend后都会让页面回流，而使用文档碎片就是解决这个问题)
+       */
+      const container = document.getElementById("app");
+      let acc = 0;
+      let total = 100;
+      const load = () => {
+        acc += 50;
+        if (acc <= total) {
+          requestAnimationFrame(() => {
+            const fragment = document.createDocumentFragment();
+            //先渲染50个 等待50个渲染完毕以后 再次渲染50个
+            for (let i = 0; i < 50; i++) {
+              const li = document.createElement("li");
+              li.innerText = i;
+              fragment.appendChild(li);
+              container.appendChild(fragment);
+            }
+            load();
+          }, 0);
+        }
+      };
+      load();
+    </script>
+  </body>
+</html>

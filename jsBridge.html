@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- jsBridge是原生app 与 webview组件javascript通过window为媒介互相通信 -->
+    <script>
+      window.JSSDK = {
+        // 获取Native端输入框value，带有回调
+        getNativeEditTextValue(callback) {
+          const callbackId = id++;
+          callbackMap[callbackId] = callback;
+          // 调用JSB方法，并将callbackId传入
+          window.NativeBridge.getNativeEditTextValue(callbackId);
+        },
+        // 接收Native端传来的callbackId
+        receiveMessage(callbackId, value) {
+          if (callbackMap[callbackId]) {
+            // 根据ID匹配callback，并执行
+            callbackMap[callbackId](value);
+          }
+        },
+      };
+
+      const showBtn = document.querySelector("#showBtn");
+      // 绑定按钮事件
+      showBtn.addEventListener("click", (e) => {
+        // 通过JSSDK调用，将回调函数传入
+        window.JSSDK.getNativeEditTextValue((value) =>
+          window.alert("Natvie输入值：" + value)
+        );
+      });
+    </script>
+  </body>
+</html>
