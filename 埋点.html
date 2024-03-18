@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- Google Analytics 脚本 -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "GA_MEASUREMENT_ID");
+    </script>
+    <script>
+      class GMA {
+        constructor() {}
+        static trackPageView(pageName) {
+          gtag("config", "GA_MEASUREMENT_ID", {
+            page_path: window.location.pathname,
+            page_title: pageName,
+          });
+        }
+
+        static trackEvent(action, category, label) {
+          gtag("event", action, {
+            event_category: category,
+            event_label: label,
+          });
+        }
+      }
+    </script>
+    <style></style>
+  </body>
+</html>

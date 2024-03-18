@@ -1,0 +1,42 @@
+.border-1px(@direction: all, @color: #ccc) {
+    position: relative;
+    border: none;
+  
+    .get-border-direction(@dir) {
+      @border-dir: e("@{dir}");
+      @dir-h: ~`@{border-dir}.indexOf("h") !== -1`;
+      @dir-v: ~`@{border-dir}.indexOf("v") !== -1`;
+  
+      &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: @dir-h ? 200% : 100%;
+        height: @dir-v ? 200% : 100%;
+        border: 1px solid @color;
+        transform-origin: 0 0;
+        transform: scale(@dir-h: 0.5, @dir-v: 0.5);
+      }
+    }
+  
+    .get-border-direction(@direction);
+  }
+  
+  // 使用示例
+  .my-element {
+    .border-1px(); // 默认方向为 all，默认颜色
+  }
+  
+  .my-element-horizontal {
+    .border-1px(h, #f00); // 水平方向，自定义颜色
+  }
+  
+  .my-element-vertical {
+    .border-1px(v, #00f); // 垂直方向，自定义颜色
+  }
+  
+  .my-element-custom {
+    .border-1px(hv, #0f0); // 水平和垂直方向，自定义颜色
+  }
+  
