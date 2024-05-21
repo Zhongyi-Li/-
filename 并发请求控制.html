@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function getRandomInt(min, max) {
+        // 确保min和max是整数
+        min = Math.ceil(min);
+        max = Math.floor(max);
+
+        // 生成min到max之间的随机整数，包括min和max
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      const request = (i) => {
+        const randomNum = getRandomInt(500, 2000);
+        return () => {
+          return new Promise((resolve, reject) => {
+            setTimeout(() => {
+              resolve(i);
+            }, randomNum);
+          });
+        };
+      };
+
+      class TaskQueue {
+        constructor() {
+          this.max = 10;
+          this.taskList = [];
+        }
+        addTask(task) {
+          this.taskList.push(task);
+        }
+
+        run() {
+          const len = this.taskList.length;
+          if (!len) return;
+          const min = Math.min(len, this.max);
+          console.log("len:", len, "max:", this.max);
+          for (let i = 0; i < min; i++) {
+            this.max--;
+            const task = this.taskList.shift();
+            task()
+              .then((res) => {
+                console.log(res);
+              })
+              .catch((err) => {})
+              .finally((res) => {
+                this.max++;
+                this.run();
+              });
+          }
+        }
+      }
+
+      const tasks = new TaskQueue();
+
+      for (let i = 0; i < 25; i++) {
+        const task = request(i);
+        tasks.addTask(task);
+      }
+      tasks.run();
+    </script>
+  </body>
+</html>

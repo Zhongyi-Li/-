@@ -1,5 +1,11 @@
 import { useEffect } from "react";
 
+const defaultOptions: MutationObserverInit = {
+  subtree: true,
+  childList: true,
+  attributeFilter: ["style", "class"],
+};
+
 export default function useMutateObserver(
   nodeOrList: HTMLElement | HTMLElement[],
   callback: MutationCallback,
